@@ -54,6 +54,7 @@ def sortI90(niz):
 
 
 def brisiIzDict(dict_):
+
     for elem in blackList:
         if elem in dict_[1]:          
             dict_[1].pop(elem)
@@ -74,10 +75,16 @@ def proveraDict(nizDict):
                     blacklist.append(key)
     return blacklist, nizDict
 
+def izdvojiDict(tuple_):
+    return tuple_[1]
+
+def spojiDict( bagOfWords, dict_):
+    z = {**bagOfWords, **dict_}
+    return z
 
 
 
-kljucneReci = ['program','program'] 
+kljucneReci = ['program','programranje'] 
 lista = map(get_pages,kljucneReci)
 
 pool = mp.Pool(mp.cpu_count())
@@ -99,14 +106,16 @@ blackList, sortiranTekst = proveraDict(list(sortiranTekst))
 
 
 
-print(blackList)
+#print(blackList)
 
-print('------------')
+#print('------------')
 
 izbaceneReci = map(brisiIzDict, sortiranTekst)
 #print(list(sortiranTekst))
-print(list(izbaceneReci))
+#print(list(izbaceneReci))
 
 #proveraDict(sortiranTekst)
 #print(list(sortiranTekst))
-     
+
+bagOfWords = reduce(spojiDict  ,  map(izdvojiDict, izbaceneReci), {})
+#print(bagOfWords)
