@@ -83,8 +83,16 @@ def spojiDict( bagOfWords, dict_):
     return z
 
 
+def napraviVektor(rec):
+    
+    if rec in izbacene[x][1].keys():
+        
+        return izbacene[x][1][rec]
+    else:
+        return 0
 
-kljucneReci = ['program','programranje'] 
+
+kljucneReci = ['program','programiranje'] 
 lista = map(get_pages,kljucneReci)
 
 pool = mp.Pool(mp.cpu_count())
@@ -99,23 +107,33 @@ translejtovano = pool.map(translate,content)
 
 sredjenTekst = map(ciscenje,translejtovano)
 sortiranTekst = map(sortI90,sredjenTekst) 
-#print(list(sortiranTekst))
 
 blackList, sortiranTekst = proveraDict(list(sortiranTekst))
 
 
 
 
-#print(blackList)
+izbaceneReci = map(brisiIzDict, sortiranTekst) # taplovi
 
-#print('------------')
 
-izbaceneReci = map(brisiIzDict, sortiranTekst)
-#print(list(sortiranTekst))
-#print(list(izbaceneReci))
 
-#proveraDict(sortiranTekst)
-#print(list(sortiranTekst))
+#izdvojeniDictovi, izbacenereci = map(izdvojiDict, izbaceneReci)
+izbacene = (list(izbaceneReci))
+bagOfWords = reduce(spojiDict  , [x[1] for x in izbacene], {})
 
-bagOfWords = reduce(spojiDict  ,  map(izdvojiDict, izbaceneReci), {})
-#print(bagOfWords)
+
+
+listaReci = list(bagOfWords.keys())
+#print(listaReci)
+listaVektora = []
+x = 0
+for i in range( len(izbacene)):
+    listaVektora.append(list(map(napraviVektor, listaReci)))
+    x = x + 1
+
+for i in listaVektora:
+    print(i)
+    print('--------------------------------------------------------------')
+    
+
+ 
