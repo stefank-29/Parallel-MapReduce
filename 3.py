@@ -2,6 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from functools import reduce
 
+# tacke
+
 data = -2 * np.random.rand(400, 2)
 
 data1 = 1 + 2 * np.random.rand(100, 2)
@@ -24,6 +26,7 @@ plt.scatter(data[ : , 0], data[ :, 1])
 
 plt.show()
 
+# centroidi
 k = 5
 np.random.seed(3)
 centroids = np.random.uniform(-2, 3, (k, 2))
@@ -81,10 +84,8 @@ for _ in range(10):
     clusters.append((cluster,reduced[i][1]))  
     plt.scatter(cluster[:, 0], cluster[:, 1], c=plot.get_facecolor()) # prikazemo klaster u boji centroida
 
-#print(clusters)
-#print(centroids)
 
-  a=map(novaKoordinata,clusters)
+  a=map(novaKoordinata,clusters) # nove koordinate centroida
   centorids = list(a)[0]
   print(centroids)
   plt.show()
