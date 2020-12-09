@@ -84,7 +84,6 @@ def spojiDict( bagOfWords, dict_):
 
 
 def napraviVektor(rec):
-    
     if rec in izbacene[x][1].keys():
         
         return izbacene[x][1][rec]
@@ -114,7 +113,8 @@ blackList, sortiranTekst = proveraDict(list(sortiranTekst))
 
 
 izbaceneReci = map(brisiIzDict, sortiranTekst) # taplovi
-
+# TODO parallel map
+# TODO < 1%
 
 
 #izdvojeniDictovi, izbacenereci = map(izdvojiDict, izbaceneReci)
