@@ -6,7 +6,7 @@ import multiprocessing as mp
 import re
 #import math
 
-def get_pages(query, results=2):
+def get_pages(query, results=50):
 
  pages = wikipedia.search(query, results=results)
  return pages
@@ -101,52 +101,47 @@ def spojiDict( bagOfWords, dict_):
 
 
 def napraviVektor(rec):
-    if rec in izbacene[x][1].keys(): # ako se nalazi rec u tekstu
+    if rec in izbacene[x][1].keys(): 
         
-        return izbacene[x][1][rec] # broj pojavljivanja reci
+        return izbacene[x][1][rec] 
     else:
         return 0
 
 
-kljucneReci = ['program','programiranje'] 
-#lista = map(get_pages,kljucneReci) 
+kljucneReci = ['Beograd', 'Prvi svetski rat', 'Protein', 'Mikroprocesor', 'Stefan Nemanja', 'Košarka'] 
 
 pool = mp.Pool(mp.cpu_count())
-naslovi = pool.map(get_pages, kljucneReci) # vraca naslove stranica
+naslovi = pool.map(get_pages, kljucneReci) 
 
-sanitizovaniNaslovi=reduce(sanitizacija, reduce(spojiNizove,naslovi,[]),[]) # izbacuje nevalidne naslove
-#print(sanitizovaniNaslovi)
+sanitizovaniNaslovi=reduce(sanitizacija, reduce(spojiNizove,naslovi,[]),[]) 
 
-content = list(pool.map(get_summary,pool.map(page_content,sanitizovaniNaslovi))) # vraca tekstove za naslov (naslov, tekst)
+content = list(pool.map(get_summary,pool.map(page_content,sanitizovaniNaslovi))) 
+translejtovano = pool.map(translate,content)
 
-translejtovano = pool.map(translate,content) # prevod na cirilicu
+sredjenTekst = pool.map(ciscenje,translejtovano) 
 
-sredjenTekst = pool.map(ciscenje,translejtovano) # sredi tekst i vrati dict(rec, broj pojavljivanja) za svaki tekst
-
-sortiranTekst = pool.map(sortI90,sredjenTekst) # 90% najcescih reci za svaki tekst
+sortiranTekst = pool.map(sortI90,sredjenTekst)
 sredjenTekst2 = list(sredjenTekst) 
 
-blackList, sortiranTekst = proveraDict(list(sortiranTekst)) # nadjemo koje reci treba da izbacimo (90%)
+blackList, sortiranTekst = proveraDict(list(sortiranTekst)) 
 blackList2, sredjenTekst = proveraDict1Posto(list(sredjenTekst))
-# print(sredjenTekst2)
+
 blackList = blackList + blackList2
 
-izbaceneReci = map(brisiIzDict, sredjenTekst2) # taplovi (naslov, dict bez izbacenih reci)
-#print(list(izbaceneReci))
+izbaceneReci = map(brisiIzDict, sredjenTekst2) 
 
 
-#izdvojeniDictovi, izbacenereci = map(izdvojiDict, izbaceneReci)
 izbacene = (list(izbaceneReci))
-bagOfWords = reduce(spojiDict  , [x[1] for x in izbacene], {}) # spojimo dictove
+bagOfWords = reduce(spojiDict  , [x[1] for x in izbacene], {}) 
 
 
 
-listaReci = list(bagOfWords.keys()) # uzmemo samo reci iz dict
-#print(listaReci)
+listaReci = list(bagOfWords.keys()) 
+
 listaVektora = []
 x = 0
 for i in range( len(izbacene)):
-    listaVektora.append(list(map(napraviVektor, listaReci))) # vektor za svaki tekst
+    listaVektora.append(list(map(napraviVektor, listaReci))) 
     x = x + 1
 
 for i in listaVektora:
